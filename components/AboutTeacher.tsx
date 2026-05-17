@@ -18,6 +18,7 @@ function VideoCard() {
   const cardRef  = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const playRef  = useRef<HTMLButtonElement>(null);
+  const soundRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const card = cardRef.current;
@@ -33,6 +34,28 @@ function VideoCard() {
     );
   }, []);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    const btn   = playRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+          if (btn) btn.textContent = "❚❚ Pause";
+        } else {
+          video.pause();
+          if (btn) btn.textContent = "▶ Play";
+        }
+      },
+      { threshold: 0.4 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
   const handlePlay = () => {
     const v = videoRef.current;
     if (!v) return;
@@ -45,12 +68,20 @@ function VideoCard() {
     }
   };
 
+  const handleSound = () => {
+    const v = videoRef.current;
+    const s = soundRef.current;
+    if (!v || !s) return;
+    v.muted = !v.muted;
+    s.textContent = v.muted ? "Activar sonido" : "Silenciar";
+  };
+
   return (
     <div
       ref={cardRef}
       style={{
         position:        "relative",
-        backgroundColor: "#0d0d0d",
+        backgroundColor: "#eee9d1",
         borderRadius:    "20px",
         overflow:        "hidden",
         padding:         "clamp(18px, 2.5vw, 28px)",
@@ -58,10 +89,9 @@ function VideoCard() {
         flexDirection:   "column",
         justifyContent:  "space-between",
         gap:             "clamp(14px, 2vw, 20px)",
-        /* altura mínima para que la card tenga presencia */
-        minHeight:       "clamp(380px, 52vw, 520px)",
+        /* altura determinada por el video — no se fija manualmente */
         /* ancho adaptable: en mobile casi full, en desktop controlado */
-        width:           "min(100%, clamp(300px, 40vw, 420px))",
+        width:           "min(100%, clamp(320px, 48vw, 500px))",
         flex:            "0 0 auto",
         alignSelf:       "flex-start",
         opacity:         0,          /* GSAP lo anima */
@@ -79,7 +109,7 @@ function VideoCard() {
           fontFamily:    "var(--font-display), sans-serif",
           fontWeight:    900,
           fontSize:      "clamp(80px, 22vw, 200px)",
-          color:         "rgba(238,233,209,0.13)",
+          color:         "rgba(52,28,9,0.09)",
           whiteSpace:    "nowrap",
           letterSpacing: "-0.02em",
           lineHeight:    1,
@@ -95,15 +125,15 @@ function VideoCard() {
       {/* ── Tarjeta interior con foto + video ── */}
       <div
         style={{
-          position:     "relative",
-          zIndex:       1,
-          borderRadius: "13px",
-          overflow:     "hidden",
-          flex:         "1 1 auto",
-          /* fondo placeholder — reemplazá con tu foto de fondo */
-          background:   "linear-gradient(145deg, #d8c9b0 0%, #c2a47e 45%, #9a7752 100%)",
-          boxShadow:    "0 10px 36px rgba(0,0,0,0.5)",
-          minHeight:    "180px",
+          position:    "relative",
+          zIndex:      1,
+          borderRadius:"13px",
+          overflow:    "hidden",
+          flex:        "0 0 auto",
+          width:       "100%",
+          aspectRatio: "762 / 1172",
+          background:  "linear-gradient(145deg, #d8c9b0 0%, #c2a47e 45%, #9a7752 100%)",
+          boxShadow:   "0 10px 36px rgba(0,0,0,0.5)",
         }}
       >
         {/*
@@ -126,6 +156,7 @@ function VideoCard() {
         <video
           ref={videoRef}
           playsInline
+          muted
           preload="metadata"
           src="/videos/tamara.mp4"
           style={{
@@ -138,30 +169,49 @@ function VideoCard() {
           }}
         />
 
-        {/* Botón Play */}
-        <button
-          ref={playRef}
-          onClick={handlePlay}
-          style={{
-            position:       "absolute",
-            bottom:         "12px",
-            left:           "14px",
-            background:     "rgba(0,0,0,0.40)",
-            border:         "none",
-            cursor:         "pointer",
-            color:          "#fff",
-            fontFamily:     "var(--font-nav)",
-            fontWeight:     700,
-            fontSize:       "10px",
-            letterSpacing:  "0.12em",
-            padding:        "5px 12px",
-            borderRadius:   "5px",
-            backdropFilter: "blur(6px)",
-            WebkitBackdropFilter: "blur(6px)",
-          }}
-        >
-          ▶ Play
-        </button>
+        {/* Botones Play + Sonido */}
+        <div style={{ position: "absolute", bottom: "12px", left: "14px", display: "flex", gap: "8px" }}>
+          <button
+            ref={playRef}
+            onClick={handlePlay}
+            style={{
+              background:     "rgba(0,0,0,0.40)",
+              border:         "none",
+              cursor:         "pointer",
+              color:          "#fff",
+              fontFamily:     "var(--font-nav)",
+              fontWeight:     700,
+              fontSize:       "10px",
+              letterSpacing:  "0.12em",
+              padding:        "5px 12px",
+              borderRadius:   "5px",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+            }}
+          >
+            ▶ Play
+          </button>
+          <button
+            ref={soundRef}
+            onClick={handleSound}
+            style={{
+              background:     "rgba(0,0,0,0.40)",
+              border:         "none",
+              cursor:         "pointer",
+              color:          "#fff",
+              fontFamily:     "var(--font-nav)",
+              fontWeight:     700,
+              fontSize:       "10px",
+              letterSpacing:  "0.12em",
+              padding:        "5px 12px",
+              borderRadius:   "5px",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+            }}
+          >
+            Activar sonido
+          </button>
+        </div>
       </div>
 
       {/* ── Footer de la card ── */}
@@ -180,7 +230,7 @@ function VideoCard() {
           fontSize:      "9px",
           letterSpacing: "0.28em",
           textTransform: "uppercase",
-          color:         "var(--cream-text)",
+          color:         "#341c09",
         }}>
           Sobre mí
         </span>
@@ -190,8 +240,8 @@ function VideoCard() {
           fontSize:      "9px",
           letterSpacing: "0.22em",
           textTransform: "uppercase",
-          color:         "var(--cream-text)",
-          opacity:       0.45,
+          color:         "#341c09",
+          opacity:       0.55,
         }}>
           Tamara Pilgram
         </span>

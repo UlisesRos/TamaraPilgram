@@ -1,9 +1,9 @@
 "use client";
 
 const SOCIALS = [
-  { label: "Instagram", href: "https://instagram.com/" },
+  { label: "Instagram", href: "https://www.instagram.com/tami_englishteacher/" },
   { label: "Gmail",     href: "mailto:tamara@gmail.com" },
-  { label: "WhatsApp",  href: "https://wa.me/54XXXXXXXXXX" },
+  { label: "WhatsApp",  href: "https://wa.me/5493416637601?text=Hola+Tamara%2C+me+gustar%C3%ADa+recibir+m%C3%A1s+informaci%C3%B3n+sobre+tus+clases.+%C2%A1Gracias%21&utm_source=chatgpt.com" },
 ];
 
 const NAV = [
