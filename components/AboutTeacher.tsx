@@ -315,7 +315,7 @@ export default function AboutTeacher() {
           fontSize:      "clamp(36px, 8vw, 120px)",
           textTransform: "uppercase",
           letterSpacing: "-0.01em",
-          lineHeight:    0.92,
+          lineHeight:    1.05,
           color:         "var(--cream-text)",
           maxWidth:      "900px",
         }}
