@@ -119,7 +119,7 @@ export default function Footer() {
           textAlign:     "center",
         }}
       >
-        © {new Date().getFullYear()} Tamara Pilgram · Diseño &amp; desarrollo — Ulises
+        © {new Date().getFullYear()} Tamara Pilgram · Diseño &amp; desarrollo — CRUDA
       </p>
     </footer>
   );
